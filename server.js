@@ -4,7 +4,7 @@ const express = require('express')
 
 const app = express()
 const port = process.env.PORT || 3000;
-const domain = 'u.sv3.com'
+const domain = process.env.DOMAIN || 'u.sv3.com'
 
 function genHash (url) {
   return crypto.createHash("sha1")
@@ -13,16 +13,9 @@ function genHash (url) {
   //convert url to sha1 hash. truncate.
 }
 
-app.route('/')
- //TODO: Create better landing page 
-  .get((req, res) => {
+app.get('/', (req, res) => {
     res.send('root my guy')
-  })
-  .post((req, res) => {
-    res.send("what's up my guy\n")
-    console.log('post called on root')
-  })
-
+})
 
 app.get('/:id', (req, res) => {
   //open file from param name. redirect to url found in that file
@@ -32,9 +25,11 @@ app.get('/:id', (req, res) => {
       //TODO: Create neater error page
       res.send('not a valid url')
     }
-    let url = data.trim()
-    res.status(301).redirect(url) 
-    console.log(`redirected to ${url}`)
+    else {
+      let url = data.trim()
+      res.status(301).redirect(url) 
+      console.log(`redirected to ${url}`)
+    }
   })
 
 })
