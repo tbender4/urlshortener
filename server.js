@@ -1,6 +1,7 @@
 const fs = require('fs')
 const crypto = require('crypto')
 const express = require('express')
+
 const app = express()
 const port = 3000
 //const port = 80
@@ -13,16 +14,8 @@ function genHash (url) {
   //convert url to sha1 hash. truncate.
 }
 
-function saveURL(url, hash) {
-  fs.writeFile(hash, url, 'utf8', (err) => {
-    if (err) 
-      console.log("unable to write")
-    //TODO: Proper error logging and handling
-  })
-}
-
 app.route('/')
- //TODO: Create landing page 
+ //TODO: Create better landing page 
   .get((req, res) => {
     res.send('root my guy')
   })
@@ -35,41 +28,49 @@ app.route('/')
 app.get('/:id', (req, res) => {
   //open file from param name. redirect to url found in that file
   let id = req.params['id']
-  fs.readFile('db/${id}', 'utf8', (err, data) => {
+  fs.readFile(`db/${id}`, 'utf8', (err, data) => {
     if (err) {
       //TODO: Create neater error page
       res.send('not a valid url')
     }
-    var url = data.trim()
+    let url = data.trim()
     res.status(301).redirect(url) 
-    console.log('redirected to ${url}')
+    console.log(`redirected to ${url}`)
   })
 
 })
 
 app.post('/url',  (req, res) => {
   // full url: localhost:3000/url?url=my_url.com
-  console.log(req.query)
+  let sendURL = (hash) => res.send(`${domain}/${hash}`)
+
   if ('url' in req.query) {
-    let hash = genHash(req.query['url'])
+    let url = req.query['url']
+    let hash = genHash(url)
     console.log(hash)
 
     //if hash exists, send over the url
-    fs.exists ('db/${hash}', (exists) => {
-      if (exists) {
-        res.send('${domain}/${hash}')
+    fs.access (`db/${hash}`, fs.F_OK, (err) => {
+      if (err) {
+        //file doesn't exist. write it
+        fs.writeFile(`db/${hash}`, url, 'utf8', (err) => {
+          if (err) {
+            console.log("unable to save file")
+            res.status(500).send("unable to save file")
+          }
+          else sendURL(hash)
+        })
+      //TODO: Proper error logging and handling
       }
       else {
-        //TODO: Save URL to hash file on disk.
-       saveURL(req.query['url'], hash).then(
+        console.log(`${hash} - ${url} exists`)
+        sendURL(hash)
       }
-    }
-    res.send(hash)
+    })
   }
   else {
     res.end() //invalid query 
   }
-  
 })
 
 app.listen(port, () => {
