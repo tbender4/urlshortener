@@ -3,7 +3,7 @@ const crypto = require('crypto')
 const express = require('express')
 
 const app = express()
-const port = 3000
+const port = 80
 //const port = 80
 const domain = 'u.sv3.com'
 
