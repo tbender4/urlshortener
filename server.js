@@ -1,10 +1,12 @@
 const fs = require('fs')
 const crypto = require('crypto')
 const express = require('express')
+const config = require('./config.json')
+const auth = require('./auth.json')
 
 const app = express()
-const port = process.env.PORT || 3000;
-const domain = process.env.DOMAIN || 'u.sv3.com'
+const port = process.env.PORT || config.port
+const domain = process.env.DOMAIN || config.url
 
 function genHash (url) {
   return crypto.createHash("sha1")
@@ -35,11 +37,18 @@ app.get('/:id', (req, res) => {
 })
 
 app.post('/url',  (req, res) => {
+  console.log(req.headers)
+  if (!auth.keys.includes(req.headers.authorization)) {
+    res.send(403)
+    return
+  }
+
   // full url: localhost:3000/url?url=my_url.com
-  let sendURL = (hash) => res.send(`${domain}/${hash}`)
+  let sendURL = (hash) => res.send(`${domain}`+(port == 80 ? "" : `:${port}`)+`/${hash}`)
 
   if ('url' in req.query) {
     let url = req.query['url']
+    
     let hash = genHash(url)
     console.log(hash)
 
@@ -52,7 +61,10 @@ app.post('/url',  (req, res) => {
             console.log("unable to save file")
             res.status(500).send("unable to save file")
           }
-          else sendURL(hash)
+          else {
+            console.log(`${hash} saving to disk`)
+            sendURL(hash)
+          }
         })
       //TODO: Proper error logging and handling
       }
@@ -63,6 +75,7 @@ app.post('/url',  (req, res) => {
     })
   }
   else {
+    res.send(400)
     res.end() //invalid query 
   }
 })

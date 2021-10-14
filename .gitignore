@@ -1,3 +1,5 @@
 db/*
+!db/bi
+auth.json
 
 .vscode/
