@@ -5,7 +5,10 @@ const ejs = require('ejs')
 
 const isHeroku = process.env.HEROKU ? true : false
 const config = require('./config.json')
-const auth = require('./auth.json') || JSON.parse('{"keys": []}')
+let auth = JSON.parse('{ "keys" : [] }')
+try {
+    auth = require('./auth.json')
+} catch (e) {}
 const port = process.env.PORT || config.port
 const domain = process.env.DOMAIN || config.url
 
