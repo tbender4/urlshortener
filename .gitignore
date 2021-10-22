@@ -1,5 +1,7 @@
 db/*
 !db/bi
+node_modules/
 auth.json
 
 .vscode/
+.DS_Store
