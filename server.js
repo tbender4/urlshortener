@@ -4,16 +4,10 @@ const express = require('express')
 const ejs = require('ejs')
 
 const isHeroku = process.env.HEROKU ? true : false
-if (!isHeroku) {
-  const config = require('./config.json')
-  const auth = require('./auth.json')
-  const port = config.port
-  const domain = config.url
-}
-else {
-  const port = process.env.PORT
-  const domain = process.env.DOMAIN
-}
+const config = require('./config.json')
+const auth = require('./auth.json') || JSON.parse('{"keys": []}')
+const port = process.env.PORT || config.port
+const domain = process.env.DOMAIN || config.url
 
 const app = express()
 //heroku settings
