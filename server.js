@@ -2,14 +2,21 @@ const fs = require('fs')
 const crypto = require('crypto')
 const express = require('express')
 const ejs = require('ejs')
-const config = require('./config.json')
-const auth = require('./auth.json')
+
+const isHeroku = process.env.HEROKU ? true : false
+if (!isHeroku) {
+  const config = require('./config.json')
+  const auth = require('./auth.json')
+  const port = config.port
+  const domain = config.url
+}
+else {
+  const port = process.env.PORT
+  const domain = process.env.DOMAIN
+}
 
 const app = express()
 //heroku settings
-const port = process.env.PORT || config.port
-const domain = process.env.DOMAIN || config.url
-const isHeroku = process.env.HEROKU ? true : false
 
 function genHash (url) {
   return crypto.createHash("sha1")
@@ -45,7 +52,7 @@ app.get('/:id', (req, res) => {
 
 app.post('/url',  (req, res) => {
   console.log(req.headers)
-  if (!auth.keys.includes(req.headers.authorization || isHeroku)) {
+  if (!isHeroku && !auth.keys.includes(req.headers.authorization)) {
     res.send(403)
     return
   }
