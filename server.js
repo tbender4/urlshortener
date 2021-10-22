@@ -55,7 +55,7 @@ app.post('/url',  (req, res) => {
   }
 
   // full url: localhost:3000/url?url=my_url.com
-  let sendURL = (hash) => res.send(`${domain}`+(port == 80 ? "" : `:${port}`)+`/${hash}`)
+  let sendURL = (hash) => res.send(`${domain}`+(port == 80 || isHeroku ? "" : `:${port}`)+`/${hash}`)
 
   if ('url' in req.query) {
     let url = req.query['url']
