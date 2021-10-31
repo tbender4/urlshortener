@@ -2,25 +2,28 @@ const fs = require('fs')
 const crypto = require('crypto')
 const express = require('express')
 const ejs = require('ejs')
-
+const sqlite3 = require('sqlite3').verbose();
 const isHeroku = process.env.HEROKU ? true : false
 const config = require('./config.json')
 let auth = JSON.parse('{ "keys" : [] }')
 try {
     auth = require('./auth.json')
 } catch (e) {}
+
 const port = process.env.PORT || config.port
 const domain = process.env.DOMAIN || config.url
-
+const baseURL = `${domain}`+(port == 80 || isHeroku ? "" : `:${port}`) 
+"$heroku"
 const app = express()
 //heroku settings
+let db = new sqlite3.Database(':memory:', (err) => {
+  if (err) {
+    return console.error(err.message);
+  }
+  console.log('Connected to the in-memory SQlite database.');
+});
 
-function genHash (url) {
-  return crypto.createHash("sha1")
-    .update(url).digest("hex")
-    .substring(0, 8)
-  //convert url to sha1 hash. truncate.
-}
+
 
 app.set('view engine', 'ejs')
 app.use(express.static('public'))   //serve .css file
@@ -35,7 +38,7 @@ app.get('/:id', (req, res) => {
   let id = req.params['id']
   fs.readFile(`db/${id}`, 'utf8', (err, data) => {
     if (err) {
-      //TODO: Create neater error page
+      //TODO: Send notification on my end with user's information if this is an error
     res.status(404).render('error')
     }
     else {
@@ -53,13 +56,18 @@ app.post('/url',  (req, res) => {
     res.send(403)
     return
   }
-
   // full url: localhost:3000/url?url=my_url.com
-  let sendURL = (hash) => res.send(`${domain}`+(port == 80 || isHeroku ? "" : `:${port}`)+`/${hash}`)
+  let sendURL = (hash) => res.send(`${baseURL}/${hash}`)
 
   if ('url' in req.query) {
+    let genHash = url => {
+      return crypto.createHash("sha1")
+        .update(url).digest("hex")
+        .substring(0, 8)
+      //convert url to sha1 hash. truncate.
+    }
+
     let url = req.query['url']
-    
     let hash = genHash(url)
     console.log(hash)
 
@@ -69,12 +77,12 @@ app.post('/url',  (req, res) => {
         //file doesn't exist. write it
         fs.writeFile(`db/${hash}`, url, 'utf8', (err) => {
           if (err) {
-            const err_msg = `unable to save file ${hash}`
+            const err_msg = `Unable to save file ${hash}`
             console.log(err_msg)
             res.status(500).send(err_msg)
           }
           else {
-            console.log(`${hash} saving to disk`)
+            console.log(`${hash} saved to disk`)
             sendURL(hash)
           }
         })
@@ -94,6 +102,6 @@ app.post('/url',  (req, res) => {
 
 app.listen(port, () => {
   console.log('Running server')
-  console.log(`${domain}` + (port == 80 ? "" : `:${port}`))
+  console.log(baseURL)
 })
 

@@ -1,6 +1,7 @@
 db/*
 !db/bi
 auth.json
+.replit
 
 .vscode/
 .DS_Store

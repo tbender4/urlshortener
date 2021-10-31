@@ -11,7 +11,7 @@ put your allowed auth keys in the list in `auth.json`
   ...
 ```
 
-it's first 7 digits of the md5 hash of a URL. I forgot why I designed it this way.
+it's first 7 digits of the sha1 hash of a URL. I forgot why I designed it this way.
 
 users access the url by {domain.com}/{hash}
 make a post request with {domain.com}/url?url={myurlhere.com} with "Authorization" in the header with a valid auth key.
