@@ -1,9 +1,9 @@
 const fs = require('fs')
 const crypto = require('crypto')
 const express = require('express')
-//const ejs = require('ejs')
-//const sqlite3 = require('sqlite3').verbose();
-//const {Sequelize} = require('sequelize')
+const ejs = require('ejs')
+const sqlite3 = require('sqlite3').verbose();
+const {Sequelize, Model, DataTypes} = require('sequelize')
 
 const isHeroku = process.env.HEROKU ? true : false
 const config = require('./config.json')
@@ -22,16 +22,40 @@ const baseURL = `${domain}`+(port == 80 || isHeroku ? "" : `:${port}`)
 //   }
 //   console.log('Connected to the in-memory SQlite database.');
 // });
-//const sequelize = new Sequelize('sqlite::memory:', {logging: console.log})
+const sequelize = new Sequelize('sqlite::memory:', {logging: console.log})
+const URL = sequelize.define('URL', {
+  incomingURL: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  shortenedURL: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true
+  },
+  accessedAt: {
+    type: DataTypes.DATE
+  }
+})
 
+const init = async() => { 
+  await URL.sync()
+  console.log("table made")
+}
+const test = async() => {
+  return 
+}
+init()
 
 const app = express()
 app.set('view engine', 'ejs')
 app.use(express.static('public'))   //serve .css file
 
 app.get('/', (req, res) => {
-    //res.status(301).redirect(url) 
-    res.status(404).render('error')
+    //res.status(301).redirect(url)
+    console.log(testURL)
+
+    res.status(404).render('error', )
 })
 
 app.get('/:id', (req, res) => {
