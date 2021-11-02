@@ -1,8 +1,10 @@
 const fs = require('fs')
 const crypto = require('crypto')
 const express = require('express')
-const ejs = require('ejs')
-const sqlite3 = require('sqlite3').verbose();
+//const ejs = require('ejs')
+//const sqlite3 = require('sqlite3').verbose();
+//const {Sequelize} = require('sequelize')
+
 const isHeroku = process.env.HEROKU ? true : false
 const config = require('./config.json')
 let auth = JSON.parse('{ "keys" : [] }')
@@ -13,18 +15,17 @@ try {
 const port = process.env.PORT || config.port
 const domain = process.env.DOMAIN || config.url
 const baseURL = `${domain}`+(port == 80 || isHeroku ? "" : `:${port}`) 
-"$heroku"
+
+// let db = new sqlite3.Database(':memory:', (err) => {
+//   if (err) {
+//     return console.error(err.message);
+//   }
+//   console.log('Connected to the in-memory SQlite database.');
+// });
+//const sequelize = new Sequelize('sqlite::memory:', {logging: console.log})
+
+
 const app = express()
-//heroku settings
-let db = new sqlite3.Database(':memory:', (err) => {
-  if (err) {
-    return console.error(err.message);
-  }
-  console.log('Connected to the in-memory SQlite database.');
-});
-
-
-
 app.set('view engine', 'ejs')
 app.use(express.static('public'))   //serve .css file
 
@@ -44,15 +45,15 @@ app.get('/:id', (req, res) => {
     else {
       let url = data.trim()
       res.status(301).redirect(url) 
-      console.log(`redirected to ${url} - ${Date.now()}`)
+      console.log(`redirecting ${id} to ${url} - ${new Date(Date.now()).toUTCString()}`)
     }
   })
-
 })
 
 app.post('/url',  (req, res) => {
   console.log(req.headers)
   if (!isHeroku && !auth.keys.includes(req.headers.authorization)) {
+    // heroku mode disables authentication
     res.send(403)
     return
   }
@@ -82,14 +83,14 @@ app.post('/url',  (req, res) => {
             res.status(500).send(err_msg)
           }
           else {
-            console.log(`${hash} saved to disk`)
+            console.log(`${url} => ${hash} saved to disk`)
             sendURL(hash)
           }
         })
       //TODO: Proper error logging and handling
       }
       else {
-        console.log(`${hash} - ${url} exists; sending it over`)
+        console.log(`${hash} <=> ${url} exists; sending it over`)
         sendURL(hash)
       }
     })
