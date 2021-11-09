@@ -2,7 +2,7 @@ URL Shortener
 
 set your port, full domain name (ex: u.sv3.us), and accepted domains to be shortened in `config.json`
 put your allowed auth keys in the list in `auth.json`. Follow auth.json.example for a valid format
-run `npm install` while in this directory to install dependencies
+run `npm install` while in this directory to install dependencies. if there's a warning about npm audit fix, do that too.
 
 main branch db is just text files
 ```
