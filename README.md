@@ -1,25 +1,28 @@
-URL Shortener
+# URL Shortener
 
-set your port, full domain name (ex: u.sv3.us), and accepted domains to be shortened in `config.json`
-put your allowed auth keys in the list in `auth.json`. Follow auth.json.example for a valid format
-run `npm install` while in this directory to install dependencies. if there's a warning about npm audit fix, do that too.
+Custom URL shortener
 
-main branch db is just text files
+## Requirements
+- LTS version of nodejs
+
+## Installation
+- Set your port, full domain name (ex: u.sv3.us) in `config.json`
+- Add your allowed auth keys expected for POST requests in the list found in `auth.json`. Follow auth.json.example for a valid format
+- Run `npm install` to install dependencies.
+- Fix vulnerabilities using npm audit fix.
+
+## Usage
+Database is stored here:
 ```
 ./db/
-  my_url1_hash
-  my_url2_hash
-  my_url3_hash
+  database.sqlite3
   ...
 ```
-staging branch is moving to sqlite3. for now it's in memory. eventually it'll be saved in the same `/db/` folder
-
-Design:
-it's first 7 digits of the sha1 hash of a URL. I forgot why I designed it this way.
-
-users access the url by `{domain.com}/{hash}`
-make a post request with `{domain.com}/url?url={myurlhere.com}` with "Authorization" in the header with a valid auth key.
+Users access their shortened url by accessing `{domain.com}/{hash}`
+SV3 adds to the database by making a POSt request to `{domain.com}/url?url={myurlhere.com}` with "Authorization" key in the header and a valid auth key as its value.
 
 todo:
 - make a post request with a custom url with `{domain.com}/url?url={myurlhere.com}&custom={myparam}`. Then the returned url will be /myparam/hash/
-- finish db changes 
+- Logging errors
+- Logging accessedAt, accessAttempts, eventually accessedBy
+- Testing at scale
