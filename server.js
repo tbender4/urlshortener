@@ -97,17 +97,7 @@ app.get('/:id', (req, res) => {
   }
   yerr()
 })
-  // fs.readFile(`db/${id}`, 'utf8', (err, data) => {
-  //   if (err) {
-  //     //TODO: Send notification on my end with user's information if this is an error
-  //   res.status(404).render('error')
-  //   }
-  //   else {
-  //     let url = data.trim()
-  //     res.status(301).redirect(url) 
-  //     console.log(`redirecting ${id} to ${url} - ${new Date(Date.now()).toUTCString()}`)
-  //   }
-  // })
+
 
 
 app.post('/url',  (req, res) => {

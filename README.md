@@ -3,7 +3,7 @@
 Custom URL shortener
 
 ## Requirements
-- LTS version of nodejs
+- nodejs 16 LTS
 
 ## Installation
 - Set your port, full domain name (ex: u.sv3.us) in `config.json`
@@ -19,10 +19,13 @@ Database is stored here:
   ...
 ```
 Users access their shortened url by accessing `{domain.com}/{hash}`
-SV3 adds to the database by making a POSt request to `{domain.com}/url?url={myurlhere.com}` with "Authorization" key in the header and a valid auth key as its value.
+SV3 adds to the database by making a POST request to `{domain.com}/url?url={myurlhere.com}` with "Authorization" key in the header and a valid auth key as its value.
 
-todo:
+Authentication can be disabled by adding HEROKU=1 as a ENV variable.
+
+## TODO
 - make a post request with a custom url with `{domain.com}/url?url={myurlhere.com}&custom={myparam}`. Then the returned url will be /myparam/hash/
 - Logging errors
 - Logging accessedAt, accessAttempts, eventually accessedBy
 - Testing at scale
+- Running as a systemd service
