@@ -47,7 +47,7 @@ const URL = sequelize.define('URL', {
   fullURL: {
     type: DataTypes.VIRTUAL,
     get() { 
-      return `${baseURL}/${this.shortenedHash}` }
+      return `http://${baseURL}/${this.shortenedHash}` }
   }
 })
 
