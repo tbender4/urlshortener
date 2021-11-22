@@ -15,7 +15,7 @@ try {
 
 const port = process.env.PORT || config.port
 const domain = process.env.DOMAIN || config.url
-const baseURL = `${domain}`+(port == 80 || isHeroku ? "" : `:${port}`) 
+const baseURL = `${domain}`+(port == 80 || port == 443 || isHeroku || process.env.PROXY ? "" : `:${port}`) 
 
 const sequelize = new Sequelize( {
   dialect: config.database_dialect,
@@ -72,10 +72,11 @@ init()
 
 const app = express()
 app.set('view engine', 'ejs')
+if (process.env.PROXY)
+  app.set('trust proxy', 'loopback')
 app.use(express.static('public'))   //serve .css file
 
 app.get('/', (req, res) => {
-    //res.status(301).redirect(url)
     res.status(404).render('error')
 })
 
@@ -91,8 +92,6 @@ app.get('/:id', (req, res) => {
       console.log('found something')
       console.log(urlObject)
       res.status(301).redirect(urlObject.incomingURL.trim())
-      // res.status(301).redirect(url) 
-      // console.log(`redirecting ${id} to ${url} - ${new Date(Date.now()).toUTCString()}`)
     }
   }
   yerr()
