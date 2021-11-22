@@ -1,0 +1,12 @@
+[Unit]
+Description=urlshortener SV3
+After=network.target
+
+[Service]
+Type=simple
+User=tbender
+ExecStart=/usr/bin/node /home/tbender/urlshortener/server.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
