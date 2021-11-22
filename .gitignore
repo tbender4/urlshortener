@@ -8,5 +8,5 @@ auth.json
 config.json
 
 node_modules/
-package_lock.json
+package-lock.json
 test/
