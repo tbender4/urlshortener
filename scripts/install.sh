@@ -16,10 +16,12 @@ npm install
 
 sudo cp ./scripts/urlshortener.service /lib/systemd/system
 sudo systemctl daemon-reload
-sudo systemctl start urlshortener
 sudo systemctl enable urlshortener
 
 sudo unlink /etc/nginx/sites-enabled/default
 sudo cp ./scripts/urlshortener.conf /etc/nginx/sites-available/
 sudo ln -s /etc/nginx/sites-available/reverse-proxy.conf /etc/nginx/sites-enabled/reverse-proxy.conf
 sudo service nginx restart
+
+echo "Please set auth.json and config.json now."
+echo "Then run: sudo systemctl start urlshortener"
