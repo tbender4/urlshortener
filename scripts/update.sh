@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 # expect script with current directory in urlshortener/scripts
 sudo systemctl stop urlshortener

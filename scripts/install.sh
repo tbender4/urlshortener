@@ -5,13 +5,16 @@ sudo apt install -y python nginx
 # npm sqlite3 4.2.0 used to due to sqlite3 5.0.2 having a security warning
 
 touch ~/.bashrc
+touch ~/.bash_history
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+echo "source ~/.bashrc" >> ~/.bash_profile
 source ~/.bashrc
+source ~/.bash_profile
 
+cd ~/
 git clone https://github.com/tbender4/urlshortener.git
 cd urlshortener
-
-nvm install --lts
+nvm install
 npm install
 
 sudo cp ./scripts/urlshortener.service /lib/systemd/system
