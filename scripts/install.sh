@@ -2,7 +2,7 @@
 
 sudo apt install -y python nginx
 # ubuntu 20 removed python2, python2 necessary for npm sqlite3 4.2.0. 
-# npm sqlite3 4.2.0 used to due to sqlite3 5.0.2 having a security warning
+# npm sqlite3 4.2.0 used due to sqlite3 5.0.2 having a security warning
 
 touch ~/.bashrc
 touch ~/.bash_history

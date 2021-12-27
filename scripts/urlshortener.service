@@ -5,9 +5,9 @@ After=network.target
 [Service]
 Type=simple
 User=tbender
-Environment="PROXY=1"
+Environment=""
 WorkingDirectory=/home/tbender/urlshortener
-ExecStart=npm start
+ExecStart=/home/tbender/.nvm/nvm-exec npm start
 Restart=on-failure
 
 [Install]

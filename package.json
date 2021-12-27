@@ -7,6 +7,6 @@
     "sqlite3": "^4.2.0"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "PROXY=1 node server.js"
   }
 }
