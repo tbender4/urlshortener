@@ -7,7 +7,7 @@ Type=simple
 User=tbender
 Environment="PROXY=1"
 WorkingDirectory=/home/tbender/urlshortener
-ExecStart=/home/tbender/.nvm/versions/node/v16.13.0/bin/node /home/tbender/urlshortener/server.js
+ExecStart=npm start
 Restart=on-failure
 
 [Install]

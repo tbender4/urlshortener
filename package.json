@@ -5,5 +5,8 @@
     "express": "^4.17.1",
     "sequelize": "^6.9.0",
     "sqlite3": "^4.2.0"
+  },
+  "scripts": {
+    "start": "node server.js"
   }
 }

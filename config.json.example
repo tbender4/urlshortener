@@ -1,5 +1,5 @@
 {
-    "port" : 3001,
+    "port" : 8080,
     "url" : "localhost",
     "database_storage" : "./db/database.sqlite3",
     "database_dialect": "sqlite"
